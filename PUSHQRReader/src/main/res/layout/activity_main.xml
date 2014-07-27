@@ -25,6 +25,13 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.push.pushqrreader.NavigationDrawerFragment" />
+        android:name="com.push.pushqrreader.NavigationDrawerFragment" />\
+
+    <ProgressBar
+        android:id="@+id/loading_spinner"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </android.support.v4.widget.DrawerLayout>

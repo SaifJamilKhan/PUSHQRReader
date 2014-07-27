@@ -7,15 +7,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.push.pushqrreader.Clients.ExerciseClient;
+import com.push.pushqrreader.Fragments.ListOfScansFragment;
+import com.push.pushqrreader.Fragments.ScanFragment;
+import com.push.pushqrreader.PUSHResponseObjects.ErrorResponse;
+import com.push.pushqrreader.PUSHResponseObjects.Exercise;
+
+import java.util.ArrayList;
 
 ;
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ExerciseClient.ExerciseClientListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -23,6 +31,11 @@ public class MainActivity extends Activity
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private CharSequence mTitle;
+
+    private ExerciseClient mClient;
+    private ArrayList<Exercise> mExercises;
+    private ArrayList<ErrorResponse> mErrors;
+    private View mLoadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +50,25 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        mLoadingSpinner = findViewById(R.id.loading_spinner);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-
+        FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
             case 0:
-                FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new ScanFragment())
                         .commit();
                 break;
-
             case 1:
+                ListOfScansFragment fragment = new ListOfScansFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .commit();
+                fragment.configureWithExercisesAndErrors(mExercises, mErrors);
                 break;
         }
 
@@ -81,12 +98,18 @@ public class MainActivity extends Activity
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                makeRequestWithPath(result.getContents());
+                mLoadingSpinner.setVisibility(View.VISIBLE);
             }
         } else {
               super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    public void makeRequestWithPath(String path) {
+        mClient = new ExerciseClient(path);
+        mClient.syncWithServer(this);
+    }
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -106,4 +129,17 @@ public class MainActivity extends Activity
         }
         return super.onCreateOptionsMenu(menu);
     }
+
+    //Exercise Client Listener
+
+    public void requestSucceededWithResponse(ArrayList<Exercise> response) {
+        mExercises.addAll(response);
+        mLoadingSpinner.setVisibility(View.GONE);
+    }
+
+    public void requestFailedWithError(ErrorResponse response) {
+        mErrors.add(response);
+        mLoadingSpinner.setVisibility(View.GONE);
+    }
+
 }

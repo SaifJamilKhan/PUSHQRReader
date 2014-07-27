@@ -1,4 +1,4 @@
-package com.push.pushqrreader;
+package com.push.pushqrreader.Fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.push.pushqrreader.R;
 
 /**
  * Sample of scanning from a Fragment
@@ -31,8 +32,8 @@ public class ScanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        Button scan = (Button) view.findViewById(R.id.scan_from_fragment);
+        View view = inflater.inflate(R.layout.fragment_scan, container, false);
+        Button scan = (Button) view.findViewById(R.id.scan_button);
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
