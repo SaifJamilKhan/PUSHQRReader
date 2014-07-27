@@ -9,8 +9,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,11 +18,9 @@ public class NetworkUtil {
 
     private static class RequestTask extends AsyncTask<String, String, String> {
         NetworkRequestListener listener;
-        JSONObject body;
 
-        public RequestTask(NetworkRequestListener listener, JSONObject body) {
+        public RequestTask(NetworkRequestListener listener) {
             this.listener = listener;
-            this.body = body;
         }
 
         @Override
@@ -39,23 +35,12 @@ public class NetworkUtil {
                 StatusLine statusLine = response.getStatusLine();
                 if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                     responseString = getResponseString(response);
-                    try {
-                        JSONObject responseJSON = new JSONObject(responseString);
-                        listener.requestSucceededWithJSON(responseJSON);
-                    } catch (JSONException e) {
-                        listener.requestFailed(e);
-                        e.printStackTrace();
-                    }
+                    listener.requestSucceededWithString(responseString);
+
                 } else if (statusLine.getStatusCode() == HttpStatus.SC_UNPROCESSABLE_ENTITY
                         || statusLine.getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
                     responseString = getResponseString(response);
-                    try {
-                        JSONObject responseJSON = new JSONObject(responseString);
-                        listener.requestFailedWithJSON(responseJSON);
-                    } catch (JSONException e) {
-                        listener.requestFailed(e);
-                        e.printStackTrace();
-                    }
+                    listener.requestFailedWithString(responseString);
                 } else {
                     listener.requestFailed(null);
                     response.getEntity().getContent().close();
@@ -89,16 +74,16 @@ public class NetworkUtil {
 
     public static interface NetworkRequestListener {
 
-        public abstract void requestSucceededWithJSON(JSONObject object);
+        public abstract void requestSucceededWithString(String object);
 
-        public abstract void requestFailedWithJSON(JSONObject object);
+        public abstract void requestFailedWithString(String object);
 
         public abstract void requestFailed(Exception e);
     }
 
     public static void makeGetRequest(String url_path,
-                                       NetworkRequestListener listener, JSONObject body) {
-        RequestTask task = new RequestTask(listener, body);
+                                       NetworkRequestListener listener) {
+        RequestTask task = new RequestTask(listener);
         task.execute(url_path);
     }
 
