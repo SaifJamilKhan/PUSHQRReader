@@ -48,6 +48,7 @@ public class ListOfScansFragment extends Fragment {
     }
 
     public void configureWithExercisesAndErrors(ArrayList<Exercise> exercises, ArrayList<ErrorResponse> errorResponses) {
+        mScanList = new ArrayList<Map<String, String>>();
         if (exercises != null) {
             for (Exercise exercise : exercises) {
                 mScanList.add(createHashmap("title", "")); //add display properties here

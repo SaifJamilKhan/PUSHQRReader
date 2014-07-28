@@ -33,6 +33,10 @@ public class MainActivity extends Activity
     private ArrayList<Exercise> mExercises = new ArrayList<Exercise>();
     private ArrayList<ErrorResponse> mErrors = new ArrayList<ErrorResponse>();
 
+    private ScanFragment mScanFragment;
+    private ListOfScansFragment mListOfScansFragment;
+    private BlankFragment mBlankFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,22 +59,28 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
             case 0:
-                ScanFragment scanFragment = new ScanFragment();
-                scanFragment.setListener(this);
+                if(mScanFragment == null) {
+                    mScanFragment = new ScanFragment();
+                }
+                mScanFragment.setListener(this);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, scanFragment).commit();
+                        .replace(R.id.container, mScanFragment).commit();
                 break;
             case 1:
-                ListOfScansFragment listFragment = new ListOfScansFragment();
-                listFragment.configureWithExercisesAndErrors(mExercises, mErrors);
+                if(mListOfScansFragment == null) {
+                    mListOfScansFragment = new ListOfScansFragment();
+                }
+                mListOfScansFragment.configureWithExercisesAndErrors(mExercises, mErrors);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, listFragment)
+                        .replace(R.id.container, mListOfScansFragment)
                         .commit();
                 break;
             default:
-                BlankFragment blankFragment = new BlankFragment();
+                if(mBlankFragment == null) {
+                    mBlankFragment = new BlankFragment();
+                }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, blankFragment)
+                        .replace(R.id.container, mBlankFragment)
                         .commit();
                 break;
         }
