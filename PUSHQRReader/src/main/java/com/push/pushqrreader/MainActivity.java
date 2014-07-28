@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import com.push.pushqrreader.Clients.ExerciseClient;
@@ -99,7 +100,9 @@ public class MainActivity extends Activity
     }
 
     public void makeRequestWithPath(String path) {
-        mClient = new ExerciseClient(path);
+        if(mClient == null) {
+            mClient = new ExerciseClient(path);
+        }
         mClient.syncWithServer(this);
     }
 
@@ -122,7 +125,11 @@ public class MainActivity extends Activity
     //Scan Fragment Listener
 
     public void scannedWithURL(String URL) {
-        makeRequestWithPath(URL);
+        if(URL != null &&  URLUtil.isValidUrl(URL)) {
+            makeRequestWithPath(URL);
+        } else {
+            Toast.makeText(MainActivity.this, "Scanned invalid URL", Toast.LENGTH_LONG);
+        }
         mLoadingSpinner.setVisibility(View.VISIBLE);
     }
 
