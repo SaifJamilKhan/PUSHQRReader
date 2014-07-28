@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 import com.push.pushqrreader.Clients.ExerciseClient;
@@ -27,6 +28,7 @@ public class MainActivity extends Activity
     private CharSequence mTitle;
 
     private ExerciseClient mClient;
+    private View mLoadingSpinner;
     private ArrayList<Exercise> mExercises = new ArrayList<Exercise>();
     private ArrayList<ErrorResponse> mErrors = new ArrayList<ErrorResponse>();
 
@@ -42,6 +44,9 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mLoadingSpinner = findViewById(R.id.progress_spinner);
+        mLoadingSpinner.setVisibility(View.GONE);
     }
 
     @Override
@@ -118,6 +123,7 @@ public class MainActivity extends Activity
 
     public void scannedWithURL(String URL) {
         makeRequestWithPath(URL);
+        mLoadingSpinner.setVisibility(View.VISIBLE);
     }
 
     //Exercise Client Listener
@@ -129,11 +135,9 @@ public class MainActivity extends Activity
             @Override
             public void run() {
                 Toast.makeText(MainActivity.this, "RESPONSE received: ", Toast.LENGTH_LONG).show();
+                mLoadingSpinner.setVisibility(View.GONE);
             }
         });
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     public void requestFailedWithError(final ErrorResponse response) {
@@ -143,10 +147,36 @@ public class MainActivity extends Activity
             @Override
             public void run() {
                 Toast.makeText(MainActivity.this, "Scanned: " + response.error, Toast.LENGTH_LONG).show();
+                mLoadingSpinner.setVisibility(View.GONE);
             }
 
         });
 
     }
 
+    @Override
+    public void requestFailed() {
+        this.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Request failed unknown ", Toast.LENGTH_LONG).show();
+                mLoadingSpinner.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
+    @Override
+    public void responseInvalid() {
+        this.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Received invalid response: ", Toast.LENGTH_LONG).show();
+                mLoadingSpinner.setVisibility(View.GONE);
+            }
+
+        });
+    }
 }
