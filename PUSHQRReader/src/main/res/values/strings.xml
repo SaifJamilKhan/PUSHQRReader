@@ -5,6 +5,8 @@
     <string name="scan_page">Scan Page</string>
     <string name="list_of_scans">List Of Scans</string>
     <string name="additional_page">Additional page</string>
+    <string name="additional_page2">Additional page2</string>
+    <string name="additional_page3">Additional page3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>

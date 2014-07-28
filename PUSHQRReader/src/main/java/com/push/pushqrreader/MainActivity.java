@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.push.pushqrreader.Clients.ExerciseClient;
+import com.push.pushqrreader.Fragments.BlankFragment;
 import com.push.pushqrreader.Fragments.ListOfScansFragment;
 import com.push.pushqrreader.Fragments.ScanFragment;
 import com.push.pushqrreader.PUSHResponseObjects.ErrorResponse;
@@ -21,9 +22,6 @@ import java.util.ArrayList;
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ExerciseClient.ExerciseClientListener, ScanFragment.ScanFragmentListener {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private CharSequence mTitle;
@@ -31,7 +29,6 @@ public class MainActivity extends Activity
     private ExerciseClient mClient;
     private ArrayList<Exercise> mExercises = new ArrayList<Exercise>();
     private ArrayList<ErrorResponse> mErrors = new ArrayList<ErrorResponse>();
-//    private View mLoadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +39,13 @@ public class MainActivity extends Activity
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-//        mLoadingSpinner = findViewById(R.id.loading_spinner);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
             case 0:
@@ -65,6 +59,12 @@ public class MainActivity extends Activity
                 listFragment.configureWithExercisesAndErrors(mExercises, mErrors);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, listFragment)
+                        .commit();
+                break;
+            default:
+                BlankFragment blankFragment = new BlankFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, blankFragment)
                         .commit();
                 break;
         }
@@ -82,6 +82,12 @@ public class MainActivity extends Activity
                 break;
             case 2:
                 mTitle = getString(R.string.additional_page);
+                break;
+            case 3:
+                mTitle = getString(R.string.additional_page2);
+                break;
+            case 4:
+                mTitle = getString(R.string.additional_page3);
                 break;
         }
         restoreActionBar();
@@ -103,9 +109,6 @@ public class MainActivity extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
             restoreActionBar();
             return true;
         }
@@ -115,7 +118,6 @@ public class MainActivity extends Activity
 
     public void scannedWithURL(String URL) {
         makeRequestWithPath(URL);
-//        mLoadingSpinner.setVisibility(View.VISIBLE);
     }
 
     //Exercise Client Listener
@@ -129,7 +131,6 @@ public class MainActivity extends Activity
                 Toast.makeText(MainActivity.this, "RESPONSE received: ", Toast.LENGTH_LONG).show();
             }
         });
-//        mLoadingSpinner.setVisibility(View.GONE);
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -142,10 +143,6 @@ public class MainActivity extends Activity
             @Override
             public void run() {
                 Toast.makeText(MainActivity.this, "Scanned: " + response.error, Toast.LENGTH_LONG).show();
-//                mLoadingSpinner.setVisibility(View.GONE);
-                mNavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout));
             }
 
         });

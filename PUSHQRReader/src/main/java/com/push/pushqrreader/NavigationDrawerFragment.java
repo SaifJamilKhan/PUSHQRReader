@@ -101,6 +101,8 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.scan_page),
                         getString(R.string.list_of_scans),
                         getString(R.string.additional_page),
+                        getString(R.string.additional_page2),
+                        getString(R.string.additional_page3),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;

@@ -25,10 +25,13 @@ public class ScanFragment extends Fragment {
         public void scannedWithURL(String URL);
     }
 
+    public void setListener(ScanFragmentListener listener) {
+        mListener = listener;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         displayToast();
     }
 
@@ -71,9 +74,5 @@ public class ScanFragment extends Fragment {
             }
             displayToast();
         }
-    }
-
-    public void setListener(ScanFragmentListener listener) {
-        mListener = listener;
     }
 }
