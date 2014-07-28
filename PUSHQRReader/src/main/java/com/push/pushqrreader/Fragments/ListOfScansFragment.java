@@ -50,7 +50,7 @@ public class ListOfScansFragment extends Fragment {
     public void configureWithExercisesAndErrors(ArrayList<Exercise> exercises, ArrayList<ErrorResponse> errorResponses) {
         if (exercises != null) {
             for (Exercise exercise : exercises) {
-                mScanList.add(createHashmap("title", ""));
+                mScanList.add(createHashmap("title", "")); //add display properties here
             }
         }
         if (errorResponses != null) {
@@ -89,7 +89,7 @@ public class ListOfScansFragment extends Fragment {
                 vi = inflater.inflate(R.layout.list_item_scan, null);
             TextView text = (TextView) vi.findViewById(R.id.scan_text);
             if (text != null) {
-                text.setText((CharSequence) data.get(position).get("name"));
+                text.setText((CharSequence) data.get(position).get("title"));
             }
             return vi;
         }

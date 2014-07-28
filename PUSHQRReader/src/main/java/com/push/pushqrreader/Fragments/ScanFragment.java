@@ -19,7 +19,10 @@ import com.push.pushqrreader.R;
 public class ScanFragment extends Fragment {
     private String toast;
 
-    public ScanFragment() {
+    private ScanFragmentListener mListener;
+
+    public interface ScanFragmentListener {
+        public void scannedWithURL(String URL);
     }
 
     @Override
@@ -62,10 +65,15 @@ public class ScanFragment extends Fragment {
                 toast = "Cancelled from fragment";
             } else {
                 toast = "Scanned from fragment: " + result.getContents();
+                if(mListener != null) {
+                    mListener.scannedWithURL(result.getContents());
+                }
             }
-
-            // At this point we may or may not have a reference to the activity
             displayToast();
         }
+    }
+
+    public void setListener(ScanFragmentListener listener) {
+        mListener = listener;
     }
 }

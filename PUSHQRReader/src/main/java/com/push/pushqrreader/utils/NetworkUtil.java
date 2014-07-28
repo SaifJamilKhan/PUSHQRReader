@@ -37,8 +37,7 @@ public class NetworkUtil {
                     responseString = getResponseString(response);
                     listener.requestSucceededWithString(responseString);
 
-                } else if (statusLine.getStatusCode() == HttpStatus.SC_UNPROCESSABLE_ENTITY
-                        || statusLine.getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+                } else if (statusLine.getStatusCode() == HttpStatus.SC_FORBIDDEN) {
                     responseString = getResponseString(response);
                     listener.requestFailedWithString(responseString);
                 } else {

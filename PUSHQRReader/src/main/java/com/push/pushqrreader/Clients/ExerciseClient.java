@@ -9,9 +9,10 @@ import com.push.pushqrreader.utils.NetworkUtil;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class ExerciseClient extends NetworkClient implements NetworkUtil.NetworkRequestListener {
+public class ExerciseClient implements NetworkUtil.NetworkRequestListener {
 
     private ExerciseClientListener mListener;
+    private String mURL;
 
     public interface ExerciseClientListener {
         public void requestSucceededWithResponse(ArrayList<Exercise> response);
